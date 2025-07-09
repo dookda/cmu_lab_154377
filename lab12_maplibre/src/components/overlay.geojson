@@ -1,0 +1,33 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Point A",
+                "category": "restaurant"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.5018,
+                    13.7563
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Point B",
+                "category": "hotel"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    100.6000,
+                    13.8000
+                ]
+            }
+        }
+    ]
+}

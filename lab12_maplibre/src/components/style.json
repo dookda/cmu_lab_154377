@@ -1,0 +1,47 @@
+{
+  "version": 8,
+  "name": "Shapefile Vector Tiles Style",
+  "metadata": {
+    "author": "Your Name",
+    "description": "แสดงเลเยอร์จาก Shapefile ผ่าน vector tiles"
+  },
+  "sources": {
+    "shp-tiles": {
+      "type": "vector",
+      "tiles": [
+        "http://localhost:8080/data/sakdatiles/{z}/{x}/{y}.pbf"
+      ],
+      "minzoom": 0,
+      "maxzoom": 14
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#ffffff"
+      }
+    },
+    {
+      "id": "shape-fill",
+      "type": "fill",
+      "source": "shp-tiles",
+      "source-layer": "filtered",
+      "paint": {
+        "fill-color": "#6a8caf",
+        "fill-opacity": 0.5
+      }
+    },
+    {
+      "id": "shape-outline",
+      "type": "line",
+      "source": "shp-tiles",
+      "source-layer": "filtered",
+      "paint": {
+        "line-color": "#2f4f4f",
+        "line-width": 2
+      }
+    }
+  ]
+}
