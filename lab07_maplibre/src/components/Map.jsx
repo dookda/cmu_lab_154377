@@ -43,7 +43,7 @@ export default function Map() {
                 .setPopup(new maplibregl.Popup().setHTML('CMU'))
                 .addTo(map);
 
-            // add source overlay layer
+            // add source overlay layer from geojson
             map.addSource('overlay-points', {
                 type: 'geojson',
                 data: {
@@ -91,6 +91,27 @@ export default function Map() {
                     'circle-radius': 8,
                     'circle-color': '#FF0000',
                     'circle-opacity': 0.8
+                }
+            });
+
+            // add source overlay lines layer from vector tile
+            map.addSource('landuse', {
+                type: 'vector',
+                tiles: [
+                    'http://localhost:8081/geoserver/gwc/service/tms/1.0.0/' +
+                    'sf:streams@EPSG:3857@pbf/{z}/{y}/{x}.pbf'
+                ],
+                minzoom: 0,
+                maxzoom: 14
+            });
+            map.addLayer({
+                id: 'landuse-fill',
+                type: 'fill',
+                source: 'landuse',
+                'source-layer': 'cm_dwr_landuse_4326',
+                paint: {
+                    'fill-color': '#88c',
+                    'fill-opacity': 0.6
                 }
             });
 
