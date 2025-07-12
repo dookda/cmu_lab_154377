@@ -94,26 +94,32 @@ export default function Map() {
                 }
             });
 
-            // add source overlay lines layer from vector tile
-            map.addSource('landuse', {
-                type: 'vector',
+            // add wms source
+            map.addSource('cmu-wms', {
+                type: 'raster',
                 tiles: [
-                    'http://localhost:8081/geoserver/gwc/service/tms/1.0.0/' +
-                    'sf:streams@EPSG:3857@pbf/{z}/{y}/{x}.pbf'
+                    'http://localhost:8081/geoserver/cm/ows?' +
+                    'service=WMS&version=1.1.0&request=GetMap&layers=cm:cm_dwr_landuse_4326' +
+                    '&styles=&format=image/png&transparent=true' +
+                    '&width=256&height=256' +
+                    '&srs=EPSG:3857&bbox={bbox-epsg-3857}'
                 ],
-                minzoom: 0,
-                maxzoom: 14
+                tileSize: 256,
+                attribution: '&copy; <a href="https://www.chiangmai.ac.th/">Chiang Mai University</a>'
             });
+
             map.addLayer({
-                id: 'landuse-fill',
-                type: 'fill',
-                source: 'landuse',
-                'source-layer': 'cm_dwr_landuse_4326',
+                id: 'cmu-wms-layer',
+                type: 'raster',
+                source: 'cmu-wms',
                 paint: {
-                    'fill-color': '#88c',
-                    'fill-opacity': 0.6
+                    'raster-opacity': 0.5
                 }
             });
+
+
+            // add source overlay lines layer from vector tile
+
 
             map.on('click', (e) => {
                 console.log(`Clicked at ${e.lngLat.lng}, ${e.lngLat.lat}`);
