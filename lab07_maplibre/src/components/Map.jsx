@@ -30,7 +30,7 @@ export default function Map() {
         map.on('load', () => {
             map.addSource('overlay-points', {
                 type: 'geojson',
-                data: 'https://raw.githubusercontent.com/sakdahomhuan/cmu_lab_154377/main/lab07_maplibre/src/data/overlay-points.geojson'
+                data: 'https://raw.githubusercontent.com/dookda/cmu_lab_154377/refs/heads/main/data/overlay-points.geojson'
             });
             map.addLayer({
                 'id': 'overlay-points',
