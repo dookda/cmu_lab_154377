@@ -6,8 +6,6 @@ import './Map.css';
 
 export default function Map() {
     const mapContainer = useRef(null)
-    const mapboxAccessToken = 'pk.eyJ1IjoiZG9va2RhIiwiYSI6ImNsbHNxMHl1YjE3NmkzY3FpbzZ4amw0eDIifQ.3ssUxVdXm-vI7iOJgNzwIw';
-
     useEffect(() => {
         const map = new maplibregl.Map({
             container: mapContainer.current,
@@ -30,7 +28,7 @@ export default function Map() {
         map.on('load', () => {
             map.addSource('overlay-points', {
                 type: 'geojson',
-                data: 'https://raw.githubusercontent.com/dookda/cmu_lab_154377/refs/heads/main/data/overlay-points.geojson'
+                data: 'https://raw.githubusercontent.com/dookda/cmu_lab_154377/refs/heads/main/data/hostpital_4326.geojson'
             });
             map.addLayer({
                 'id': 'overlay-points',
@@ -44,14 +42,7 @@ export default function Map() {
             });
             map.on('click', 'overlay-points', (e) => {
                 const coordinates = e.features[0].geometry.coordinates.slice();
-                const description = e.features[0].properties.description;
-
-                // Ensure that if the map is zoomed out such that multiple
-                // copies of the feature are visible, the popup appears
-                // over the copy being pointed to.
-                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-                }
+                const description = e.features[0].properties.name;
 
                 new maplibregl.Popup()
                     .setLngLat(coordinates)
@@ -66,7 +57,56 @@ export default function Map() {
             });
         });
 
+        // add line layer
+        map.on('load', () => {
+            map.addSource('overlay-line', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/dookda/cmu_lab_154377/refs/heads/main/data/trans_4326.geojson'
+            });
+            map.addLayer({
+                id: 'overlay-line',
+                type: 'line',
+                source: 'overlay-line',
+                paint: {
+                    'line-color': '#3F51B5',
+                    'line-width': 3,
+                    'line-opacity': 0.8,
+                    'line-dasharray': [3, 1],
+                    'line-gap-width': 0,
+                }
+            });
+        });
 
+        // add polygon layer
+        map.on('load', () => {
+            map.addSource('overlay-polygon', {
+                type: 'geojson',
+                data: 'https://raw.githubusercontent.com/dookda/cmu_lab_154377/refs/heads/main/data/amphoe_4326.geojson'
+            });
+            map.addLayer({
+                id: 'overlay-polygon',
+                type: 'fill',
+                source: 'overlay-polygon',
+                paint: {
+                    'fill-color': '#3F51B5',
+                    'fill-opacity': 0.2,
+                    'fill-outline-color': '#3F51B5'
+                }
+            });
+            // add outline layer
+            map.addLayer({
+                id: 'overlay-polygon-outline',
+                type: 'line',
+                source: 'overlay-polygon',
+                paint: {
+                    'line-color': '#ff0000',
+                    'line-width': 2,
+                    'line-opacity': 0.8,
+                    'line-dasharray': [2, 2],
+                    'line-gap-width': 0,
+                }
+            });
+        });
 
         return () => map.remove();
     }, [])
