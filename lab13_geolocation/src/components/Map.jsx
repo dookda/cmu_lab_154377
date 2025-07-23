@@ -1,80 +1,57 @@
-import React, { useEffect, useRef } from 'react';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import './Map.css';
+import React, { version } from 'react'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import maplibregl from 'maplibre-gl'
+import './Map.css'
+import { useRef, useEffect } from 'react'
 
-export default function Map() {
-    const mapContainer = useRef(null);
-    const mapRef = useRef(null);
+
+export default function Map({ onFoundLocation }) {
+
+    const mapContainer = useRef(null)
 
     useEffect(() => {
-        if (mapRef.current) return;
-        const map = L.map(mapContainer.current, {
-            center: [18.802614467416145, 98.95028216958734],
-            zoom: 13
-        });
-
-        mapRef.current = map;
-
-        // add code here
-        //basemap
-        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-        });
-
-        //overlaymap
-        var province = L.tileLayer.wms("https://engrids.soc.cmu.ac.th/geoserver/th/wms?", {
-            layers: "th:province_4326",
-            format: "image/png",
-            transparent: true
+        const map = new maplibregl.Map({
+            container: mapContainer.current,
+            center: [100, 19],
+            zoom: 5,
+            style: 'https://api.maptiler.com/maps/landscape/style.json?key=QcH5sAeCUv5rMXKrnJms'
         })
 
-        var amphoe = L.tileLayer.wms("https://engrids.soc.cmu.ac.th/geoserver/th/wms?", {
-            layers: "th:amphoe_4326",
-            format: "image/png",
-            transparent: true
+        let nav = new maplibregl.NavigationControl();
+        map.addControl(nav, 'top-right');
+
+        let geolocate = new maplibregl.GeolocateControl({
+            positionOptions: {
+                enableHighAccuracy: true,
+            },
+            trackUserLocation: true, // เปิดใช้งานการติดตามต่อเนื่อง
+            showUserLocation: true, // แสดงจุดตำแหน่งผู้ใช้
+        });
+
+        geolocate.on('geolocate', (e) => {
+            // console.log(e);
+            if (!e?.coords) return;
+
+            const location = { lat: e.coords.latitude, lng: e.coords.longitude, accuracy: e.coords.accuracy }
+            onFoundLocation(location)
+
         })
 
-        var baseMap = {
-            "แผนที่ OSM": osm.addTo(map),
-        }
+        geolocate.on('trackuserlocationstart', () => {
+            console.log('A trackuserlocationstart event has occurred.')
+        });
 
-        var overLaymap = {
-            "ขอบเขตจังหวัด": province.addTo(map),
-            "ขอบเขตอำเภอ": amphoe.addTo(map)
-        }
+        map.addControl(geolocate)
 
-        L.control.layers(baseMap, overLaymap).addTo(map)
-
-        // local
-        map.locate({ setView: true, maxZoom: 20 })
-
-        function onLocationFound(e) {
-            console.log(e);
-            var radius = e.accuracy;
-            var gps = L.marker(e.latlng, { draggable: true });
-            var circle = L.circle(e.latlng, radius);
-
-            circle.addTo(map);
-            gps.addTo(map).bindPopup("คุณอยู่ที่นี่").openPopup();
-        }
-
-
-        function onLocationError(e) {
-            console.log(e);
-        }
-
-        map.on('locationfound', onLocationFound);
-
-        return () => {
-            mapRef.current.remove();
-            mapRef.current = null;
-        }
+        // clear ข้อมูลเมื่อคอมโพเนนต์ถูกถอน
+        return () => map.remove()
     }, [])
 
+
     return (
-        <div ref={mapContainer}
-            className="map"
-        >Map</div>
+        <div
+            ref={mapContainer}
+            className="card shadow-sm map">
+        </div>
     )
 }
