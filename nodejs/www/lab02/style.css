@@ -1,0 +1,68 @@
+body {
+    background-color: #f6f6f6;
+}
+
+.f-30 {
+    font-size: 25px;
+}
+
+.f-20 {
+    font-size: 18px;
+}
+
+s1 {
+    background-color: black;
+    color: white;
+}
+
+.s2 {
+    background-color: #e5a5a5;
+    color: rgb(78, 72, 72);
+}
+
+#s3 {
+    background-color: violet;
+}
+
+.img-crop {
+    width: 300px;
+}
+
+.card {
+    background-color: azure;
+    box-shadow: 10px 14px 25px rgb(185, 184, 184);
+}
+
+.b-round {
+    border-radius: 15px;
+    border-width: 2px;
+    border-color: gray;
+    border-style: dashed;
+}
+
+.p-5 {
+    padding: 8px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.red {
+    background-color: red;
+}
+
+.gray {
+    background-color: aliceblue;
+}
+
+.flex {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}

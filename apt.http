@@ -1,1 +1,23 @@
 GET https://api.mapbox.com/directions/v5/mapbox/driving/-74.194811%2C40.805123%3B-74.024581%2C40.874524?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=pk.eyJ1IjoiZG9va2RhIiwiYSI6ImNscTM3azN3OTA4dmEyaXF1bmg3cXRvbDUifQ.d1Ovd_n9PwJqc_MdGS66-A
+
+###
+POST http://localhost:3000/api/hospital
+content-type: application/json
+
+{
+    "name": "test",
+    "geom": "{ \"type\": \"Point\", \"coordinates\": [99.02642032, 18.78853112] }"
+}
+
+###
+
+PUT http://localhost:3000/api/hospital/70
+content-type: application/json
+
+{
+    "name": "aha"
+}
+
+###
+
+DELETE http://localhost:3000/api/hospital/70
