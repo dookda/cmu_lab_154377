@@ -12,6 +12,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/vite": "^4.1.11",
+    "@turf/bbox": "^7.2.0",
     "bootstrap": "^5.3.7",
     "daisyui": "^5.0.46",
     "leaflet": "^1.9.4",
