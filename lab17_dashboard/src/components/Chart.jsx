@@ -1,5 +1,6 @@
 import React from 'react';
 import Highcharts from 'highcharts';
+import './Chart.css'
 
 export default function Chart({ data }) {
     const chartRef = React.useRef(null);
@@ -8,6 +9,7 @@ export default function Chart({ data }) {
         if (!data || !data.data || data.data.length === 0) {
             return;
         }
+        console.log(data);
 
         Highcharts.chart(chartRef.current, {
             chart: {
@@ -42,7 +44,7 @@ export default function Chart({ data }) {
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
-            <div ref={chartRef}></div>
+            <div ref={chartRef} className='chart'>chart</div>
         </div>
     );
 }
