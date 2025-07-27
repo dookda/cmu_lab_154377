@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const Pool = require('pg').Pool
 
 app.use(bodyParser.json())
+app.use(cors())
 
 const db = new Pool({
     host: 'localhost',
@@ -84,7 +86,7 @@ app.delete('/api/hospital/:id', async (req, res) => {
     }
 });
 
-app.get('/gethospital/:lat/:lng/:radius', async (req, res) => {
+app.get('/api/gethospital/:lat/:lng/:radius', async (req, res) => {
     try {
         const { lat, lng, radius } = req.params;
         const sql = `SELECT h.*, ST_AsGeoJSON(h.geom) AS json

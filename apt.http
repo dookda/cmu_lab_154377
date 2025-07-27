@@ -27,4 +27,4 @@ content-type: application/json
 DELETE http://localhost:3000/api/hospital/70
 
 ### 
-GET http://localhost:3000/gethospital/18.793600885794586/98.97791621336049/5000
+GET http://localhost:3000/api/gethospital/18.793600885794586/98.97791621336049/5000
