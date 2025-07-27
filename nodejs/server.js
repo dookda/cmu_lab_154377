@@ -16,8 +16,8 @@ const db = new Pool({
 app.get('/api/hospital', async (req, res) => {
     try {
         const sql = "SELECT * FROM cm_hospital_4326";
-        const result = await db.query(sql);
-        res.status(200).json(result.rows)
+        const { rows } = await db.query(sql);
+        res.status(200).json(rows)
     } catch (error) {
         console.error(error)
     }
@@ -27,8 +27,8 @@ app.get('/api/hospital/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const sql = `SELECT * FROM cm_hospital_4326 WHERE id = ${id}`;
-        const result = await db.query(sql);
-        res.status(200).json(result.rows)
+        const { rows } = await db.query(sql);
+        res.status(200).json(rows)
     } catch (error) {
         console.error(error)
     }
@@ -78,11 +78,30 @@ app.delete('/api/hospital/:id', async (req, res) => {
                   WHERE id = $1
                   RETURNING id`;
         const { rows } = await db.query(sql, [id]);
-        return res.json({ deletedId: rows[0].id });
+        res.json({ deletedId: rows[0].id });
     } catch (error) {
         console.error(error);
     }
 });
+
+app.get('/gethospital/:lat/:lng/:radius', async (req, res) => {
+    try {
+        const { lat, lng, radius } = req.params;
+        const sql = `SELECT h.*, ST_AsGeoJSON(h.geom) AS json
+                    FROM cm_hospital_4326 AS h
+                    WHERE ST_DWithin(
+                        ST_Transform(h.geom, 32647),
+                        ST_Transform(ST_SetSRID(ST_MakePoint($1, $2), 4326), 32647), 
+                    $3)`;
+        const { rows } = await db.query(sql, [lng, lat, radius]);
+        res.status(200).json(rows);
+    } catch (error) {
+        console.error('Error in /gethospital:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 
 app.use('/', express.static('www'))
 

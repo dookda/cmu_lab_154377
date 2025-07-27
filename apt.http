@@ -1,6 +1,12 @@
 GET https://api.mapbox.com/directions/v5/mapbox/driving/-74.194811%2C40.805123%3B-74.024581%2C40.874524?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=pk.eyJ1IjoiZG9va2RhIiwiYSI6ImNscTM3azN3OTA4dmEyaXF1bmg3cXRvbDUifQ.d1Ovd_n9PwJqc_MdGS66-A
 
 ###
+GET http://localhost:3000/api/hospital
+
+###
+GET http://localhost:3000/api/hospital/50
+
+###
 POST http://localhost:3000/api/hospital
 content-type: application/json
 
@@ -10,7 +16,6 @@ content-type: application/json
 }
 
 ###
-
 PUT http://localhost:3000/api/hospital/70
 content-type: application/json
 
@@ -19,5 +24,7 @@ content-type: application/json
 }
 
 ###
-
 DELETE http://localhost:3000/api/hospital/70
+
+### 
+GET http://localhost:3000/gethospital/18.793600885794586/98.97791621336049/5000
