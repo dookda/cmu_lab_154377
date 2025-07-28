@@ -8,8 +8,8 @@ import './Map.css'
 export default function Map() {
     const mapContainer = useRef(null)
     const mapRef = useRef(null)
-    // const [points, setPoints] = useState([])
-    // const [items, setItems] = useState([]);
+    const [points, setPoints] = useState([])
+    const markers = useRef([]);
 
     useEffect(() => {
         const map = new maplibregl.Map({
@@ -24,28 +24,36 @@ export default function Map() {
 
         map.on('click', (e) => {
             console.log(e);
-        })
+            setPoints(points => [...points, {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [e.lngLat.lng, e.lngLat.lat]
+                },
+                properties: {}
+            }]);
+        });
 
-        map.on('load', (e) => {
-            const options = {
-                bbox: [99.7259, 18.49395, 99.86979, 18.629636],
-            };
-            const points = turf.randomPoint(100, options);
-            const voronoiPolygons = turf.voronoi(points, options);
-            console.log(voronoiPolygons);
+        map.on('load', () => {
+            // const options = {
+            //     bbox: [99.7259, 18.49395, 99.86979, 18.629636],
+            // };
+            // const points = turf.randomPoint(100, options);
+            // const voronoiPolygons = turf.voronoi(points, options);
+            // console.log(voronoiPolygons);
 
-            const markers = [];
-            markers.forEach(m => m.remove())
-            points.features.forEach(i => {
-                const marker = new maplibregl.Marker()
-                    .setLngLat(i.geometry.coordinates)
-                    .addTo(map)
-                markers.push(marker)
-            })
+            // const markers = [];
+            // markers.forEach(m => m.remove())
+            // points.features.forEach(i => {
+            //     const marker = new maplibregl.Marker()
+            //         .setLngLat(i.geometry.coordinates)
+            //         .addTo(map)
+            //     markers.push(marker)
+            // })
 
             map.addSource('veronoi', {
                 type: 'geojson',
-                data: voronoiPolygons
+                data: { type: "Polygon", coordinates: [] }
             })
 
             map.addLayer({
@@ -73,30 +81,29 @@ export default function Map() {
         return () => map.remove()
     }, [])
 
-    // useEffect(() => {
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map || !map.getSource('veronoi')) return;
+        const pointCollection = {
+            type: "FeatureCollection",
+            features: points
+        };
 
-    //     const map = mapRef.current
+        const bbox = [99.7259, 18.49395, 99.86979, 18.629636];
+        const voronoiPolygons = turf.voronoi(pointCollection, { bbox });
+        map.getSource('veronoi').setData(voronoiPolygons)
 
-    //     console.log(items);
+        markers.current.forEach(marker => marker.remove());
+        markers.current = [];
+        points.forEach(pt => {
+            const marker = new maplibregl.Marker()
+                .setLngLat(pt.geometry.coordinates)
+                .addTo(map);
+            markers.current.push(marker);
+        });
 
-    // const options = {
-    //     bbox: [99.7259, 18.49395, 99.86979, 18.629636],
-    // };
-    // const points = turf.randomPoint(100, options);
-    // const voronoiPolygons = turf.voronoi(points, options);
-    // console.log(voronoiPolygons);
+    }, [points]);
 
-    // const markers = [];
-    // markers.forEach(m => m.remove())
-    // points.features.forEach(i => {
-    //     const marker = new maplibregl.Marker()
-    //         .setLngLat(i.geometry.coordinates)
-    //         .addTo(map)
-    //     markers.push(marker)
-    // })
-
-
-    // }, [points])
 
     return (
         <div ref={mapContainer}
